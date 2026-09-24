@@ -714,130 +714,90 @@ or explicitly reconstructed moment from the source.
 
 
 # ============================================================
-# 15 — GEMINI 3.1 FLASH IMAGE PROMPT
-# ============================================================
+# 15 — IMAGE PROMPT CONTRACT
 
-Generate a STRUCTURED IMAGE PROMPT.
+The canonical low-level image prompt template is:
 
-The image prompt must be written in ENGLISH.
+`my_docs/01/prompt_image.md`
 
-Use this exact structure:
+The master prompt is responsible for resolving the template variables from
+source evidence, persistent DNA/locks, current visual state, and user-directed
+generation requirements.
 
-## IMAGE GENERATION PROMPT
+Do not create a second competing image-template schema inside this master.
 
-```text
-REFERENCE:
-Use the supplied YouTube Short as the primary visual reference.
+The resolved prompt MUST follow the exact section order of
+`my_docs/01/prompt_image.md`:
 
-SOURCE MOMENT:
-{{SOURCE_TIMESTAMP}}
+## SUBJECT
+{{subject}}
 
-SCENE ID:
-{{SCENE_ID}}
+## ENVIRONMENT
+{{environment}}
 
-SCENE DESCRIPTION:
-{{EXACT_VISUAL_DESCRIPTION}}
+## OBJECTS
+{{objects}}
 
-CHARACTER LOCK:
-{{CHARACTER_DNA}}
+## COMPOSITION
+{{composition}}
 
-CHARACTER POSITION:
-{{POSITION}}
+## LIGHTING
+{{lighting}}
 
-POSE:
-{{POSE}}
+## STYLE
+{{style}}
 
-FACIAL EXPRESSION:
-{{EXPRESSION}}
+## CAMERA
+{{camera}}
 
-GAZE:
-{{GAZE}}
+## IMAGE
+{{image}}
 
-WARDROBE:
-{{WARDROBE}}
+## TEXT
+{{text}}
 
-OBJECT INTERACTION:
-{{OBJECT_INTERACTION}}
+## QUALITY
+{{quality}}
 
-ENVIRONMENT LOCK:
-{{ENVIRONMENT_DNA}}
+## NEGATIVE
+{{negative}}
 
-FOREGROUND:
-{{FOREGROUND}}
+## INSTRUCTION
+{{instruction}}
 
-MIDGROUND:
-{{MIDGROUND}}
+### Variable Resolution Rules
 
-BACKGROUND:
-{{BACKGROUND}}
+- Resolve every variable before final output.
+- Use concrete source-supported values whenever available.
+- If evidence is insufficient, use UNKNOWN.
+- If an element is absent from the source, use NOT PRESENT.
+- Do not leave unresolved generic placeholders in a final generation prompt.
+- Keep image-generation instructions in ENGLISH.
+- Preserve source fidelity and continuity.
+- The image represents a selected visual/keyframe state, not an animation timeline.
+- Do not inject narration, SFX, music, duration, or Extend state into this image template
+  unless such information is explicitly represented by the template variable.
 
-PROPS:
-{{PROPS}}
+### Master-to-Template Mapping
 
-COMPOSITION:
-{{COMPOSITION}}
+| Template variable | Master source |
+|---|---|
+| subject | scene subject / character / primary visual subject |
+| environment | ENVIRONMENT LOCK + ENVIRONMENT STATE |
+| objects | source-supported props and object state |
+| composition | COMPOSITION + FRAMING + SUBJECT PLACEMENT |
+| lighting | LIGHTING LOCK + LIGHTING STATE |
+| style | source visual style or USER-DIRECTED TRANSFORMATION |
+| camera | CAMERA DNA + CAMERA STATE |
+| image | exact selected visual moment / keyframe description |
+| text | source-supported visible text only; otherwise NOT PRESENT |
+| quality | target image quality requirements |
+| negative | source-fidelity negative constraints |
+| instruction | final generation instruction |
 
-FRAMING:
-{{FRAMING}}
+The generated image MUST be suitable as the visual starting point for
+the subsequent IMAGE → VIDEO operation.
 
-CAMERA:
-{{CAMERA_DNA}}
-
-PERSPECTIVE:
-{{PERSPECTIVE}}
-
-LENS CHARACTER:
-{{LENS}}
-
-DEPTH OF FIELD:
-{{DOF}}
-
-FOCUS:
-{{FOCUS}}
-
-LIGHTING:
-{{LIGHTING_DNA}}
-
-COLOR:
-{{COLOR_DNA}}
-
-ATMOSPHERE:
-{{ATMOSPHERE}}
-
-VISUAL STYLE:
-{{STYLE}}
-
-TEXTURE:
-{{TEXTURE}}
-
-REALISM:
-{{REALISM}}
-
-CONTINUITY REQUIREMENTS:
-Preserve the exact identity, facial structure,
-body proportions, wardrobe, environment, props,
-camera perspective, lighting, color palette,
-composition and spatial relationships from the reference.
-
-The generated frame must represent the same
-story moment and must function as the first frame
-of the subsequent image-to-video animation.
-
-DO NOT:
-change character identity,
-change wardrobe,
-change environment,
-add unrelated objects,
-add unrelated characters,
-alter spatial relationships,
-change the camera perspective,
-change the lighting,
-change the emotional state,
-create unsupported events,
-distort anatomy,
-create duplicate objects,
-create inconsistent hands or fingers,
-invent text or logos.
 
 ============================================================
 16 — ANIMATE IMAGE
@@ -1345,521 +1305,145 @@ CONTINUITY CRITICAL ELEMENTS:
 
 ============================================================
 18 — EXTEND ENGINE
-============================================================
-EXTEND is NOT a new scene.
 
-EXTEND is a direct continuation.
+The canonical low-level image/video continuation template is:
+
+`my_docs/01/image_extend.md`
+
+This master prompt orchestrates the template. It does not replace or
+duplicate its schema.
+
+EXTEND is a continuation operation, not a new-scene generation operation.
+
+Before resolving the template, read the latest FINAL STATE MEMORY and
+identify the next causal event.
+
+The resolved EXTEND prompt MUST follow the exact section structure of
+`my_docs/01/image_extend.md`.
+
+## IMAGE → VIDEO
+
+```text
+{{SUBJECT}}
+{{ACTION}}
+{{MOTION}}
+{{CAMERA}}
+{{ENVIRONMENT}}
+{{STYLE}}
+{{NARRATION}}
+{{TEXT_OVERLAY}}
+```
+
+## VIDEO → EXTEND
+
+```text
+{{CONTINUATION}}
+{{SUBJECT_MOTION}}
+{{CAMERA}}
+{{ENVIRONMENT}}
+{{STYLE}}
+{{AUDIO}}
+{{NARRATION}}
+{{TEXT_OVERLAY}}
+```
+
+### IMAGE → VIDEO Resolution
+
+Resolve:
+
+- SUBJECT from the selected image subject and source-supported identity.
+- ACTION from the actual source event represented by the image.
+- MOTION from supported character, object, and environmental motion.
+- CAMERA from CAMERA DNA + current CAMERA STATE.
+- ENVIRONMENT from ENVIRONMENT LOCK + current ENVIRONMENT STATE.
+- STYLE from the source visual style or explicit user transformation.
+- NARRATION from source-supported narration state.
+- TEXT_OVERLAY from source-supported on-screen text; otherwise NOT PRESENT.
+
+The operation starts from the supplied generated image and animates that
+visual state. Do not invent unsupported actions or camera movements.
+
+### VIDEO → EXTEND Resolution
+
+Resolve:
+
+- CONTINUATION from the latest FINAL STATE and the next causal event.
+- SUBJECT_MOTION from the current character/object motion and momentum.
+- CAMERA from the previous CAMERA STATE and required continuation.
+- ENVIRONMENT from the previous ENVIRONMENT STATE.
+- STYLE from the persistent visual style.
+- AUDIO from the previous AUDIO STATE and the next supported audio event.
+- NARRATION from the current narration state and continuation.
+- TEXT_OVERLAY from the current source-supported text state.
+
+The extension MUST begin from the previous clip state.
+
+It MUST preserve:
+
+- character identity
+- current character state
+- object state
+- environment state
+- camera state
+- lighting continuity
+- color continuity
+- motion and momentum
+- narration
+- dialogue when applicable
+- voice continuity
+- SFX when applicable
+- ambience
+- music when applicable
+- emotional state
+- narrative state
+
+The low-level template intentionally remains compact. The required
+continuity state is supplied by the resolved variable values and by the
+FINAL STATE MEMORY that precedes the operation.
+
+### EXTEND STATE TRANSITION
+
+`FINAL STATE N`
+→ resolve VIDEO → EXTEND variables
+→ `CLIP N+1`
+→ extract `FINAL STATE N+1`
 
-The extension must begin from:
+EXTEND MUST NOT:
 
-PREVIOUS FINAL FRAME
-+
-PREVIOUS FINAL AUDIO STATE
-+
-PREVIOUS CHARACTER STATE
-+
-PREVIOUS CAMERA STATE
-+
-PREVIOUS ENVIRONMENT STATE
-+
-PREVIOUS MOTION
-+
-NEXT CAUSAL EVENT
+- restart the scene
+- reset the character
+- reset the camera
+- reset the environment
+- teleport or morph objects
+- invent unsupported events
+- introduce unrelated characters or objects
+- change identity or wardrobe without source/user justification
+- create unexplained time jumps
+- break audio continuity
 
-EXTEND PROMPT
-LANGUAGE:
-ENGLISH
+### Duration Handling
 
-DURATION:
-MINIMUM 3 SECONDS
-MAXIMUM 10 SECONDS
+Do not hard-code a native Extend duration in this template.
 
-CONTINUE DIRECTLY FROM THE PREVIOUS CLIP.
+Use:
 
-DURATION:
-{{3–10 seconds}}
+SOURCE DURATION
+REQUESTED DURATION
+PLATFORM NATIVE DURATION
+ACTUAL GENERATED DURATION
+POST-PROCESSING DURATION
 
-PREVIOUS CLIP:
-{{CLIP_ID}}
+For Google Vids Animate Image, use the verified platform-native duration
+defined by the current platform capability contract.
 
-PREVIOUS FINAL FRAME:
-{{FINAL_FRAME_DESCRIPTION}}
+For Extend, report the actual runtime-supported duration when known.
+Otherwise mark it UNKNOWN or runtime-dependent.
 
-PREVIOUS FINAL AUDIO STATE:
-{{FINAL_AUDIO_STATE}}
+Never convert an application requirement into an unsupported native
+platform capability.
 
 
-# CONTINUITY LOCK
-
-CHARACTER LOCK:
-{{CHARACTER_DNA}}
-
-ENVIRONMENT LOCK:
-{{ENVIRONMENT_DNA}}
-
-CAMERA LOCK:
-{{CAMERA_DNA}}
-
-LIGHTING LOCK:
-{{LIGHTING_DNA}}
-
-COLOR LOCK:
-{{COLOR_DNA}}
-
-VOICE LOCK:
-{{VOICE_DNA}}
-
-
-# EXACT STARTING STATE
-
-CHARACTER POSITION:
-{{POSITION}}
-
-POSE:
-{{POSE}}
-
-EXPRESSION:
-{{EXPRESSION}}
-
-GAZE:
-{{GAZE}}
-
-BODY ORIENTATION:
-{{BODY_ORIENTATION}}
-
-HEAD ORIENTATION:
-{{HEAD_ORIENTATION}}
-
-HAND POSITION:
-{{HAND_POSITION}}
-
-OBJECT POSITIONS:
-{{OBJECT_POSITIONS}}
-
-CAMERA POSITION:
-{{CAMERA_POSITION}}
-
-CAMERA ANGLE:
-{{CAMERA_ANGLE}}
-
-FRAMING:
-{{FRAMING}}
-
-CURRENT MOTION:
-{{CURRENT_MOTION}}
-
-CURRENT MOMENTUM:
-{{MOMENTUM}}
-
-LIGHTING:
-{{LIGHTING}}
-
-AUDIO STATE:
-{{AUDIO_STATE}}
-
-
-# CONTINUATION
-
-This is the SAME continuous shot.
-
-Do not restart the scene.
-
-Do not reset the character.
-
-Do not reset the camera.
-
-Do not reset the environment.
-
-Do not reset the lighting.
-
-Do not reset the audio.
-
-Continue the exact physical and narrative state
-from the previous clip.
-
-
-# NEXT CAUSAL EVENT
-
-NEXT EVENT:
-{{NEXT_CAUSAL_EVENT}}
-
-CAUSE:
-{{WHY_IT_HAPPENS}}
-
-REACTION:
-{{REACTION}}
-
-RESULT:
-{{RESULT}}
-
-The event must logically follow the previous final state.
-
-
-# CHARACTER ACTION
-
-STARTING ACTION:
-{{CURRENT_ACTION}}
-
-CONTINUED ACTION:
-{{CONTINUED_ACTION}}
-
-NEW ACTION:
-{{NEW_ACTION}}
-
-BODY MOVEMENT:
-{{...}}
-
-ARM MOVEMENT:
-{{...}}
-
-HAND MOVEMENT:
-{{...}}
-
-LEG MOVEMENT:
-{{...}}
-
-HEAD:
-{{...}}
-
-EYES:
-{{...}}
-
-FACIAL EXPRESSION:
-{{...}}
-
-EMOTIONAL TRANSITION:
-{{...}}
-
-
-# OBJECT CONTINUITY
-
-Preserve:
-
-position
-orientation
-scale
-material
-color
-momentum
-interaction
-physical contact
-
-OBJECT MOVEMENT:
-{{...}}
-
-
-# CAMERA CONTINUITY
-
-Continue from the exact previous camera state.
-
-CAMERA POSITION:
-{{...}}
-
-CAMERA MOVEMENT:
-{{...}}
-
-DIRECTION:
-{{...}}
-
-SPEED:
-{{...}}
-
-TRAJECTORY:
-{{...}}
-
-FRAMING:
-{{...}}
-
-FOCUS:
-{{...}}
-
-LENS:
-{{...}}
-
-Do not reset or teleport the camera.
-
-
-# ENVIRONMENT CONTINUITY
-
-Preserve:
-
-location
-architecture
-foreground
-midground
-background
-weather
-time of day
-atmosphere
-props
-
-ENVIRONMENTAL MOTION:
-{{...}}
-
-
-# LIGHTING CONTINUITY
-
-Maintain the previous:
-
-light direction
-intensity
-color temperature
-shadow direction
-shadow softness
-contrast
-exposure
-
-
-# MOTION CONTINUITY
-
-Continue:
-
-body momentum
-object momentum
-camera momentum
-environmental motion
-
-Preserve screen direction.
-
-Preserve spatial relationships.
-
-Avoid unnatural acceleration or teleportation.
-
-
-# NARRATION CONTINUITY
-
-NARRATION STATUS:
-{{...}}
-
-PREVIOUS NARRATION:
-{{...}}
-
-NEXT NARRATION:
-{{...}}
-
-NARRATOR:
-{{...}}
-
-VOICE:
-{{VOICE_LOCK}}
-
-PITCH:
-{{...}}
-
-TONE:
-{{...}}
-
-EMOTION:
-{{...}}
-
-PACING:
-{{...}}
-
-TIMING:
-{{...}}
-
-Continue naturally from the previous audio state.
-
-Do not introduce a different narrator.
-
-
-# DIALOGUE CONTINUITY
-
-SPEAKER:
-{{...}}
-
-PREVIOUS LINE:
-{{...}}
-
-NEXT LINE:
-{{...}}
-
-EMOTION:
-{{...}}
-
-DELIVERY:
-{{...}}
-
-PACING:
-{{...}}
-
-PAUSES:
-{{...}}
-
-Maintain natural lip synchronization.
-
-
-# SFX CONTINUITY
-
-PREVIOUS SFX:
-{{...}}
-
-CONTINUING SFX:
-{{...}}
-
-NEW SFX:
-{{...}}
-
-Every SFX must correspond to a visual event.
-
-
-# AMBIENCE CONTINUITY
-
-PREVIOUS AMBIENCE:
-{{...}}
-
-CONTINUING AMBIENCE:
-{{...}}
-
-Maintain the same acoustic environment.
-
-
-# MUSIC CONTINUITY
-
-PREVIOUS MUSIC:
-{{...}}
-
-CONTINUING MUSIC:
-{{...}}
-
-MOOD:
-{{...}}
-
-TEMPO:
-{{...}}
-
-INTENSITY:
-{{...}}
-
-Do not abruptly replace the music.
-
-
-# AUDIO TRANSITION
-
-The audio must feel like one uninterrupted recording.
-
-No:
-
-sudden silence
-volume jump
-voice replacement
-acoustic-space change
-random SFX
-random music
-abrupt ambience change
-
-
-# TEMPORAL PLAN
-
-Use the actual supported duration of the selected runtime.
-
-PHASE 1:
-Continue the exact previous state.
-
-PHASE 2:
-{{DEVELOPMENT}}
-
-PHASE 3:
-{{REACTION / ESCALATION}}
-
-PHASE 4:
-{{NEW STATE}}
-
-Never exceed the actual generated clip duration.
-
-
-# NEW FINAL STATE
-
-CHARACTER:
-{{...}}
-
-POSITION:
-{{...}}
-
-POSE:
-{{...}}
-
-EXPRESSION:
-{{...}}
-
-GAZE:
-{{...}}
-
-OBJECTS:
-{{...}}
-
-ENVIRONMENT:
-{{...}}
-
-CAMERA:
-{{...}}
-
-LIGHTING:
-{{...}}
-
-MOTION:
-{{...}}
-
-NARRATION:
-{{...}}
-
-DIALOGUE:
-{{...}}
-
-VOICE:
-{{...}}
-
-SFX:
-{{...}}
-
-AMBIENCE:
-{{...}}
-
-MUSIC:
-{{...}}
-
-EMOTIONAL STATE:
-{{...}}
-
-NARRATIVE STATE:
-{{...}}
-
-NEXT CAUSAL EVENT:
-{{...}}
-
-This NEW FINAL STATE becomes the source state
-for the next EXTEND operation.
-
-
-# EXTEND NEGATIVE CONSTRAINTS
-
-Never:
-
-restart
-reset
-teleport
-morph
-change identity
-change wardrobe
-change environment
-change time of day without cause
-change lighting without cause
-change camera without cause
-change screen direction
-invent characters
-invent objects
-invent dialogue
-invent narration
-change narrator
-change voice
-break lip-sync
-break physics
-break audio continuity
-create random actions
-create unexplained transitions
-create unexplained time jumps
-
-19 — CONTINUOUS EXTENSION LOOP
+# 19 — CONTINUOUS EXTENSION LOOP
 # CONTINUOUS VIDEO ENGINE
 
 CLIP 01
@@ -1910,7 +1494,7 @@ NEXT CAUSAL EVENT
 =
 CLIP N+1
 
-20 — CONTINUITY MEMORY
+# 20 — CONTINUITY MEMORY
 Gunakan memory berikut sebagai persistent state:
 
 # CONTINUITY MEMORY
@@ -1978,7 +1562,7 @@ Gunakan memory berikut sebagai persistent state:
 ## NEXT CLIP START STATE
 {{...}}
 
-21 — FINAL OUTPUT FORMAT
+# 21 — FINAL OUTPUT FORMAT
 Seluruh output akhir WAJIB Markdown.
 
 Gunakan struktur berikut:
@@ -2340,25 +1924,26 @@ inside the actual English generation prompt.
 
 # DURATION PROTOCOL
 
-ANIMATE IMAGE:
+Separate:
 
-minimum = 3 seconds
-maximum = 10 seconds
+SOURCE DURATION
+REQUESTED DURATION
+PLATFORM NATIVE DURATION
+ACTUAL GENERATED DURATION
+POST-PROCESSING DURATION
 
-EXTEND:
+For Google Vids Animate Image:
 
-minimum = 3 seconds
-maximum = 10 seconds
+PLATFORM NATIVE DURATION = 8 seconds.
 
-Never output:
+Do not represent 3–10 seconds as the native Animate Image duration.
 
-0–2 seconds
-11+ seconds
+For Google Vids Extend:
 
-Default:
+DURATION = runtime-dependent unless the current runtime explicitly
+documents a fixed duration.
 
-6 seconds.
-
+Never hard-code undocumented duration limits or guarantees.
 
 # CONTINUITY PROTOCOL
 
@@ -2610,8 +2195,9 @@ Before every EXTEND:
 3. Read current motion and momentum.
 4. Read current audio state.
 5. Read the next causal event.
-6. Generate the continuation.
-7. Extract a NEW FINAL STATE.
+6. Resolve the exact VIDEO → EXTEND template from `my_docs/01/image_extend.md`.
+7. Generate the continuation.
+8. Extract a NEW FINAL STATE.
 
 The extension must explicitly preserve:
 
@@ -2632,6 +2218,11 @@ The extension must explicitly preserve:
 - emotional state
 - narrative state
 
+The END STATE of Clip N becomes the START STATE of Clip N+1.
+
+The low-level /01 template remains the canonical prompt shape.
+The master prompt supplies its resolved values and continuity state.
+
 # 33 — PLATFORM FACTUALITY RULE
 
 Platform documentation can change.
@@ -2642,7 +2233,26 @@ current official documentation before treating the capability as factual.
 Do not hard-code undocumented duration, model names, API parameters,
 audio guarantees, or UI behavior as permanent facts.
 
-# 34 — IMPLEMENTATION BOUNDARY
+# 34 — /01 TEMPLATE DEPENDENCIES
+
+This master prompt depends on these canonical low-level templates:
+
+- `my_docs/01/prompt_image.md` — IMAGE prompt contract.
+- `my_docs/01/image_extend.md` — IMAGE → VIDEO and VIDEO → EXTEND contract.
+
+Dependency rule:
+
+`googlevids.md` = orchestration, analysis, state management, validation, and output contract.
+
+`my_docs/01/prompt_image.md` = low-level IMAGE prompt structure.
+
+`my_docs/01/image_extend.md` = low-level IMAGE → VIDEO and VIDEO → EXTEND prompt structure.
+
+Do not introduce a competing low-level schema into `googlevids.md`.
+If a /01 template changes, update the corresponding master mapping and
+resolution rules.
+
+# 35 — IMPLEMENTATION BOUNDARY
 
 This document is a prompt specification.
 
