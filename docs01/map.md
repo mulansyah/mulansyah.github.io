@@ -2,992 +2,259 @@
 
 ## PURPOSE
 
-Define the relationship, dependency, execution order, authority boundaries, state transitions, and responsibility of every document inside `docs01`.
+This file is the entry point for AI.
 
-`map.md` is the architectural map of `docs01`.
+Before executing any task related to DOCS01, the AI MUST read and understand every document listed in this map.
 
-It does not replace or duplicate the detailed contracts defined inside the individual documents.
-
----
-
-# 1. DOCUMENT STRUCTURE
-
-```text
-docs01/
-├── role.md
-├── task.md
-├── constraint.md
-├── analysis.md
-├── prompt_image.md
-├── prompt_image_to_video.md
-├── prompt_video_to_extend.md
-├── final_state.md
-├── quality_control.md
-└── map.md
-```
+Do not execute the workflow after reading only a subset of the documentation.
 
 ---
 
-# 2. DOCUMENT RESPONSIBILITY
+# DOCUMENTATION BASE URL
 
-## role.md
-
-Defines:
-
-- AI identity
-- AI responsibility
-- source authority
-- evidence model
-- source vs generated state boundary
-- downstream document relationship
-
-Role:
-
-```text
-WHO
-```
+https://raw.githubusercontent.com/mulansyah/mulansyah.github.io/refs/heads/main/docs01/
 
 ---
 
-## task.md
+# REQUIRED DOCUMENTS
 
-Defines:
+The AI MUST read all documents below.
 
-- primary task
-- execution flow
-- source analysis sequence
-- generation sequence
-- extension sequence
-- continuity requirements
-- generation boundaries
+## 01 — ROLE
 
-Role:
+URL:
 
-```text
-WHAT
-```
+https://raw.githubusercontent.com/mulansyah/mulansyah.github.io/refs/heads/main/docs01/role.md
+
+Purpose:
+
+Defines the AI identity, responsibilities, source authority, evidence model, and source/generated state boundary.
 
 ---
 
-## constraint.md
+## 02 — TASK
 
-Defines:
+URL:
 
-- global rules
-- source fidelity
-- evidence rules
-- uncertainty handling
-- temporal constraints
-- visual constraints
-- audio constraints
-- text constraints
-- variable rules
-- source/generated separation
-- generation boundaries
+https://raw.githubusercontent.com/mulansyah/mulansyah.github.io/refs/heads/main/docs01/task.md
 
-Role:
+Purpose:
 
-```text
-RULES
-```
+Defines the primary task and workflow from YouTube source analysis through image generation, video generation, and repeated extension.
 
 ---
 
-## analysis.md
+## 03 — CONSTRAINT
 
-Defines the source analysis contract.
+URL:
 
-Responsible for:
+https://raw.githubusercontent.com/mulansyah/mulansyah.github.io/refs/heads/main/docs01/constraint.md
 
-- YouTube source identification
-- source accessibility
-- metadata
-- timeline
-- scenes
-- visual analysis
-- audio analysis
-- text analysis
-- evidence classification
-- SOURCE STATE
+Purpose:
 
-Role:
-
-```text
-SOURCE ANALYSIS
-```
-
-Authority:
-
-```text
-YouTube source
-```
-
-Output:
-
-```text
-SOURCE STATE
-```
+Defines global rules for source fidelity, evidence, uncertainty, temporal behavior, visual/audio/text handling, variables, generation boundaries, and continuity.
 
 ---
 
-## prompt_image.md
+## 04 — ANALYSIS
 
-Defines the image-generation prompt contract.
+URL:
 
-Input:
+https://raw.githubusercontent.com/mulansyah/mulansyah.github.io/refs/heads/main/docs01/analysis.md
 
-```text
-SOURCE STATE
-```
+Purpose:
 
-Output:
-
-```text
-IMAGE
-```
-
-Role:
-
-```text
-SOURCE STATE → IMAGE
-```
+Defines the source-analysis contract and the structure and rules of the SOURCE STATE.
 
 ---
 
-## prompt_image_to_video.md
+## 05 — PROMPT IMAGE
 
-Defines the IMAGE → VIDEO prompt contract.
+URL:
 
-Input:
+https://raw.githubusercontent.com/mulansyah/mulansyah.github.io/refs/heads/main/docs01/prompt_image.md
 
-```text
-IMAGE
-```
+Purpose:
 
-Variables:
-
-```text
-SUBJECT
-ACTION
-MOTION
-CAMERA
-ENVIRONMENT
-STYLE
-NARRATION
-TEXT_OVERLAY
-```
-
-Output:
-
-```text
-VIDEO #1
-```
-
-Role:
-
-```text
-IMAGE → VIDEO
-```
-
-The image is the authoritative visual starting state.
+Defines the IMAGE generation prompt contract derived from the SOURCE STATE.
 
 ---
 
-## final_state.md
+## 06 — PROMPT IMAGE TO VIDEO
 
-Defines the generated video's final-state contract.
+URL:
 
-Input:
+https://raw.githubusercontent.com/mulansyah/mulansyah.github.io/refs/heads/main/docs01/prompt_image_to_video.md
+
+Purpose:
+
+Defines the IMAGE → VIDEO prompt contract and temporal transformation from the existing image.
+
+---
+
+## 07 — PROMPT VIDEO TO EXTEND
+
+URL:
+
+https://raw.githubusercontent.com/mulansyah/mulansyah.github.io/refs/heads/main/docs01/prompt_video_to_extend.md
+
+Purpose:
+
+Defines the VIDEO → EXTEND prompt contract and causal continuity from the latest generated final state.
+
+---
+
+## 08 — FINAL STATE
+
+URL:
+
+https://raw.githubusercontent.com/mulansyah/mulansyah.github.io/refs/heads/main/docs01/final_state.md
+
+Purpose:
+
+Defines the generated video's FINAL STATE and establishes the latest generated endpoint as the continuity authority for the next extension.
+
+---
+
+## 09 — QUALITY CONTROL
+
+URL:
+
+https://raw.githubusercontent.com/mulansyah/mulansyah.github.io/refs/heads/main/docs01/quality_control.md
+
+Purpose:
+
+Defines validation rules, QC statuses, quality gates, evidence checks, continuity checks, and hallucination/unsupported-content checks.
+
+---
+
+# REQUIRED READING PROTOCOL
+
+The AI MUST:
+
+1. Read `map.md` first.
+2. Read every document listed under REQUIRED DOCUMENTS.
+3. Read the documents in the numbered order.
+4. Read the complete content of each document.
+5. Build a unified understanding of the complete DOCS01 specification.
+6. Respect the source-of-truth and authority boundaries defined by the documentation.
+7. Complete the required reading before executing any generation or analysis task.
+
+The AI MUST NOT:
+
+- read only the document that appears relevant;
+- skip `constraint.md`;
+- skip `analysis.md`;
+- skip any generation contract;
+- skip `final_state.md`;
+- skip `quality_control.md`;
+- invent missing rules;
+- treat `map.md` as a replacement for the individual contracts;
+- execute the workflow before completing the required documentation reading.
+
+---
+
+# READING ORDER
 
 ```text
-VIDEO #N
-```
-
-Output:
-
-```text
-FINAL STATE #N
-```
-
-Responsible for recording:
-
-- subject
-- objects
-- environment
-- camera
-- lighting
-- color
-- style
-- motion
-- audio
-- text
-- narrative
-- temporal position
-- provenance
-
-Role:
-
-```text
-VIDEO → FINAL STATE
-```
-
-Authority:
-
-```text
-latest generated video
+map.md
+   ↓
+01 role.md
+   ↓
+02 task.md
+   ↓
+03 constraint.md
+   ↓
+04 analysis.md
+   ↓
+05 prompt_image.md
+   ↓
+06 prompt_image_to_video.md
+   ↓
+07 prompt_video_to_extend.md
+   ↓
+08 final_state.md
+   ↓
+09 quality_control.md
 ```
 
 ---
 
-## prompt_video_to_extend.md
+# EXECUTION ORDER
 
-Defines the VIDEO → EXTEND prompt contract.
-
-Input:
-
-```text
-VIDEO #N
-FINAL STATE #N
-```
-
-Variables:
-
-```text
-CONTINUATION
-SUBJECT_MOTION
-CAMERA
-ENVIRONMENT
-STYLE
-AUDIO
-NARRATION
-TEXT_OVERLAY
-```
-
-Output:
-
-```text
-VIDEO #(N+1)
-```
-
-Role:
-
-```text
-FINAL STATE #N → VIDEO #(N+1)
-```
-
-The latest generated final state is the authoritative continuity starting state.
-
----
-
-## quality_control.md
-
-Defines validation and quality gates.
-
-Responsible for validating:
-
-- source analysis
-- image prompt
-- image → video
-- final state
-- video → extend
-- variables
-- evidence
-- continuity
-- hallucination
-- unsupported content
-
-Possible statuses:
-
-```text
-PASS
-FAIL
-UNKNOWN
-NOT APPLICABLE
-```
-
-Role:
-
-```text
-VALIDATION / QUALITY GATE
-```
-
----
-
-## map.md
-
-Defines:
-
-- document relationships
-- dependencies
-- execution order
-- state transitions
-- authority boundaries
-- document responsibilities
-- quality-control gates
-- variable mappings
-
-Role:
-
-```text
-SYSTEM MAP
-```
-
-`map.md` does not generate source analysis, generation prompts, final states, or QC results.
-
----
-
-# 3. EXECUTION FLOW
-
-The canonical workflow is:
+After the complete documentation has been read:
 
 ```text
 YouTube Shorts URL
-        │
-        ▼
-    role.md
-        │
-        ▼
-    task.md
-        │
-        ▼
- constraint.md
-        │
-        ▼
-   analysis.md
-        │
-        ▼
-   SOURCE STATE
-        │
-        ▼
-quality_control.md
-        │
-      PASS
-        │
-        ▼
- prompt_image.md
-        │
-        ▼
-      IMAGE
-        │
-        ▼
-quality_control.md
-        │
-      PASS
-        │
-        ▼
-prompt_image_to_video.md
-        │
-        ▼
-    VIDEO #1
-        │
-        ▼
-  final_state.md
-        │
-        ▼
- FINAL STATE #1
-        │
-        ▼
-quality_control.md
-        │
-      PASS
-        │
-        ▼
-prompt_video_to_extend.md
-        │
-        ▼
-    VIDEO #2
-        │
-        ▼
-  final_state.md
-        │
-        ▼
- FINAL STATE #2
-        │
-        ▼
-quality_control.md
-        │
-      PASS
-        │
-        ▼
-prompt_video_to_extend.md
-        │
-        ▼
-    VIDEO #3
-        │
-        ▼
-      ...
-```
-
----
-
-# 4. STATE FLOW
-
-## SOURCE STATE
-
-Created by:
-
-```text
+        ↓
 analysis.md
-```
-
-Source authority:
-
-```text
-YouTube source
-```
-
-Used by:
-
-```text
-prompt_image.md
-quality_control.md
-```
-
-The SOURCE STATE is immutable.
-
-Generated changes must never modify the historical SOURCE STATE.
-
----
-
-## IMAGE STATE
-
-Created by:
-
-```text
-prompt_image.md
-```
-
-Input authority:
-
-```text
+        ↓
 SOURCE STATE
-```
-
-Used by:
-
-```text
-prompt_image_to_video.md
-```
-
----
-
-## GENERATED VIDEO STATE
-
-Created by:
-
-```text
-prompt_image_to_video.md
-```
-
-or:
-
-```text
-prompt_video_to_extend.md
-```
-
-Used by:
-
-```text
-final_state.md
+        ↓
 quality_control.md
-```
-
----
-
-## FINAL STATE
-
-Created from:
-
-```text
-VIDEO #N
-```
-
-Defined by:
-
-```text
-final_state.md
-```
-
-Used by:
-
-```text
-prompt_video_to_extend.md
-quality_control.md
-```
-
-The latest FINAL STATE is authoritative for the next extension.
-
----
-
-# 5. AUTHORITY MODEL
-
-## SOURCE AUTHORITY
-
-For source facts:
-
-```text
-YouTube source
         ↓
-   analysis.md
+PASS
         ↓
-   SOURCE STATE
-```
-
-The source has authority over:
-
-- subject identity
-- observable appearance
-- source events
-- source environment
-- source objects
-- source camera behavior
-- source lighting
-- source colors
-- source motion
-- source audio
-- source narration
-- source dialogue
-- source text
-- source timeline
-
----
-
-## GENERATED AUTHORITY
-
-For generated continuity:
-
-```text
-Generated VIDEO #N
-        ↓
-FINAL STATE #N
-        ↓
-VIDEO #(N+1)
-```
-
-The latest generated FINAL STATE has authority over the starting state of the next extension.
-
----
-
-## EVIDENCE PRIORITY
-
-For source evidence:
-
-```text
-OBSERVED
-    >
-INFERRED
-    >
-UNKNOWN
-```
-
-`INFERRED` must never override contradictory `OBSERVED` evidence.
-
----
-
-# 6. SOURCE / GENERATED BOUNDARY
-
-```text
-                    SOURCE DOMAIN
-                         │
-                         ▼
-                 YouTube Shorts
-                         │
-                         ▼
-                   analysis.md
-                         │
-                         ▼
-                    SOURCE STATE
-                         │
-                         │
-─────────────────────────┼─────────────────────────
-                         │
-                  GENERATION DOMAIN
-                         │
-                         ▼
-                 prompt_image.md
-                         │
-                         ▼
-                       IMAGE
-                         │
-                         ▼
-          prompt_image_to_video.md
-                         │
-                         ▼
-                     VIDEO #1
-                         │
-                         ▼
-                  final_state.md
-                         │
-                         ▼
-                  FINAL STATE #1
-                         │
-                         ▼
-          prompt_video_to_extend.md
-                         │
-                         ▼
-                     VIDEO #2
-                         │
-                         ▼
-                  FINAL STATE #2
-                         │
-                         ▼
-                       ...
-```
-
-The source domain and generated domain must remain logically separate.
-
----
-
-# 7. QUALITY CONTROL GATES
-
-## GATE 1 — SOURCE
-
-```text
-analysis.md
-     │
-     ▼
-quality_control.md
-```
-
-Validate:
-
-```text
-SOURCE ANALYSIS
-```
-
-`PASS` → continue.
-
-`FAIL` → correct the source analysis before continuing.
-
----
-
-## GATE 2 — IMAGE
-
-```text
 prompt_image.md
-     │
-     ▼
-quality_control.md
-```
-
-Validate:
-
-```text
-IMAGE PROMPT
-```
-
----
-
-## GATE 3 — IMAGE → VIDEO
-
-```text
-prompt_image_to_video.md
-     │
-     ▼
-quality_control.md
-```
-
-Validate:
-
-```text
-IMAGE → VIDEO
-```
-
----
-
-## GATE 4 — FINAL STATE
-
-```text
-VIDEO #N
-     │
-     ▼
-final_state.md
-     │
-     ▼
-quality_control.md
-```
-
-Validate:
-
-```text
-FINAL STATE
-```
-
----
-
-## GATE 5 — EXTENSION
-
-```text
-FINAL STATE #N
-     │
-     ▼
-prompt_video_to_extend.md
-     │
-     ▼
-VIDEO #(N+1)
-     │
-     ▼
-quality_control.md
-```
-
-Validate:
-
-```text
-VIDEO → EXTEND
-CONTINUITY
-```
-
----
-
-# 8. RESPONSIBILITY MATRIX
-
-| File | Responsibility | Input | Output | Authority |
-|---|---|---|---|---|
-| `role.md` | AI identity | AI context | Role | Role definition |
-| `task.md` | Workflow | Role + source | Task flow | Workflow definition |
-| `constraint.md` | Rules | Workflow | Constraints | Global rules |
-| `analysis.md` | Source analysis | YouTube URL | SOURCE STATE | YouTube source |
-| `prompt_image.md` | Image generation | SOURCE STATE | IMAGE | SOURCE STATE |
-| `prompt_image_to_video.md` | Animation | IMAGE | VIDEO #1 | IMAGE |
-| `final_state.md` | Generated state | VIDEO #N | FINAL STATE #N | Latest generated video |
-| `prompt_video_to_extend.md` | Extension | FINAL STATE + VIDEO | VIDEO #(N+1) | Latest FINAL STATE |
-| `quality_control.md` | Validation | Workflow stage | QC result | Validation rules |
-| `map.md` | Architecture | All docs | System map | Document relationship |
-
----
-
-# 9. DEPENDENCY MAP
-
-```text
-role.md
-   │
-   ▼
-task.md
-   │
-   ▼
-constraint.md
-   │
-   ▼
-analysis.md
-   │
-   ▼
-SOURCE STATE
-   │
-   ├──────────────► quality_control.md
-   │
-   ▼
-prompt_image.md
-   │
-   ▼
+        ↓
 IMAGE
-   │
-   ├──────────────► quality_control.md
-   │
-   ▼
+        ↓
+quality_control.md
+        ↓
+PASS
+        ↓
 prompt_image_to_video.md
-   │
-   ▼
+        ↓
 VIDEO #1
-   │
-   ▼
+        ↓
 final_state.md
-   │
-   ▼
+        ↓
 FINAL STATE #1
-   │
-   ├──────────────► quality_control.md
-   │
-   ▼
+        ↓
+quality_control.md
+        ↓
+PASS
+        ↓
 prompt_video_to_extend.md
-   │
-   ▼
+        ↓
 VIDEO #2
-   │
-   ▼
+        ↓
 final_state.md
-   │
-   ▼
+        ↓
 FINAL STATE #2
-   │
-   ├──────────────► quality_control.md
-   │
-   ▼
+        ↓
+quality_control.md
+        ↓
+PASS
+        ↓
 prompt_video_to_extend.md
-   │
-   ▼
+        ↓
 ...
 ```
 
 ---
 
-# 10. VARIABLE MAPPING
+# DOCUMENT RESPONSIBILITY
 
-## SOURCE STATE → IMAGE
-
-```text
-analysis.subject
-        ↓
-SUBJECT
-
-analysis.environment
-        ↓
-ENVIRONMENT
-
-analysis.objects
-        ↓
-OBJECTS
-
-analysis.composition
-        ↓
-COMPOSITION
-
-analysis.lighting
-        ↓
-LIGHTING
-
-analysis.style
-        ↓
-STYLE
-
-analysis.camera
-        ↓
-CAMERA
-
-analysis.visual_state
-        ↓
-IMAGE
-
-analysis.text
-        ↓
-TEXT
-```
-
-Additional generation controls:
-
-```text
-QUALITY
-NEGATIVE
-INSTRUCTION
-```
-
-must be resolved from the applicable generation requirements and constraints.
+| Order | File | Responsibility |
+|---|---|---|
+| 01 | `role.md` | AI role and authority |
+| 02 | `task.md` | Task and workflow |
+| 03 | `constraint.md` | Global constraints |
+| 04 | `analysis.md` | Source analysis and SOURCE STATE |
+| 05 | `prompt_image.md` | IMAGE generation |
+| 06 | `prompt_image_to_video.md` | IMAGE → VIDEO |
+| 07 | `prompt_video_to_extend.md` | VIDEO → EXTEND |
+| 08 | `final_state.md` | Generated FINAL STATE |
+| 09 | `quality_control.md` | Validation and quality gates |
 
 ---
 
-## IMAGE → VIDEO
+# STATE FLOW
 
 ```text
-IMAGE
-        ↓
-SUBJECT
-
-SOURCE / IMAGE STATE
-        ↓
-ACTION
-
-SOURCE / IMAGE TEMPORAL STATE
-        ↓
-MOTION
-
-IMAGE / SOURCE CAMERA STATE
-        ↓
-CAMERA
-
-IMAGE / SOURCE ENVIRONMENT
-        ↓
-ENVIRONMENT
-
-IMAGE / SOURCE STYLE
-        ↓
-STYLE
-
-SOURCE AUDIO
-        ↓
-NARRATION
-
-SOURCE TEXT STATE
-        ↓
-TEXT_OVERLAY
-```
-
-`ACTION` and `MOTION` describe temporal change from the existing IMAGE.
-
----
-
-## FINAL STATE → VIDEO EXTEND
-
-```text
-FINAL STATE
-        │
-        ├── narrative.current_event
-        ├── narrative.current_position
-        ├── narrative.unresolved_action
-        └── narrative.next_causal_opportunity
-                         ↓
-                  CONTINUATION
-```
-
-```text
-FINAL STATE
-        │
-        ├── subject.current_motion
-        ├── subject.orientation
-        ├── objects.current_motion
-        ├── motion.direction
-        ├── motion.phase
-        └── motion.momentum
-                         ↓
-                  SUBJECT_MOTION
-```
-
-```text
-FINAL STATE.camera
-        ↓
-CAMERA
-```
-
-```text
-FINAL STATE.environment
-        ↓
-ENVIRONMENT
-```
-
-```text
-FINAL STATE.style
-        ├── color
-        ├── lighting
-        └── visual characteristics
-                         ↓
-                      STYLE
-```
-
-```text
-FINAL STATE.audio
-        ↓
-AUDIO
-```
-
-```text
-FINAL STATE.narration
-        ↓
-NARRATION
-```
-
-```text
-FINAL STATE.text
-        ↓
-TEXT_OVERLAY
-```
-
-The mapping must preserve the semantic meaning of each state.
-
----
-
-# 11. CONTINUITY PRINCIPLE
-
-The continuity authority always moves forward.
-
-```text
+YouTube Source
+     ↓
 SOURCE STATE
      ↓
 IMAGE
@@ -1007,33 +274,189 @@ FINAL STATE #3
 ...
 ```
 
-The source remains historically authoritative.
+The SOURCE STATE is derived from the YouTube source and remains historically immutable.
 
-The latest generated final state becomes operationally authoritative for subsequent generation.
+The latest generated FINAL STATE is the operational continuity authority for the next VIDEO → EXTEND operation.
 
 ---
 
-# 12. ERROR PRINCIPLE
+# SOURCE OF TRUTH
 
-When information is unavailable:
+Each document owns its domain:
+
+```text
+role.md
+→ AI role semantics
+
+task.md
+→ task and workflow semantics
+
+constraint.md
+→ global constraint semantics
+
+analysis.md
+→ source-analysis semantics
+
+prompt_image.md
+→ image-generation semantics
+
+prompt_image_to_video.md
+→ image-to-video semantics
+
+prompt_video_to_extend.md
+→ video-extension semantics
+
+final_state.md
+→ generated-state semantics
+
+quality_control.md
+→ validation semantics
+
+map.md
+→ documentation discovery, reading order,
+  dependencies, and orchestration
+```
+
+If documents overlap:
+
+1. `constraint.md` defines global constraints.
+2. The applicable domain document defines domain-specific behavior.
+3. `map.md` defines documentation discovery, relationships, reading order, and orchestration.
+4. `map.md` MUST NOT silently redefine another document's domain contract.
+
+---
+
+# SOURCE / GENERATED BOUNDARY
+
+```text
+SOURCE DOMAIN
+    │
+    ▼
+YouTube Shorts
+    │
+    ▼
+analysis.md
+    │
+    ▼
+SOURCE STATE
+    │
+    ├───────────────┐
+    │               │
+    ▼               ▼
+IMAGE GENERATION   QUALITY CONTROL
+    │
+    ▼
+IMAGE
+    │
+    ▼
+IMAGE → VIDEO
+    │
+    ▼
+VIDEO #1
+    │
+    ▼
+FINAL STATE #1
+    │
+    ▼
+VIDEO → EXTEND
+    │
+    ▼
+VIDEO #2
+    │
+    ▼
+FINAL STATE #2
+    │
+    ▼
+...
+```
+
+Source facts and generated states MUST remain logically separate.
+
+The original source remains authoritative for source facts.
+
+The latest generated FINAL STATE becomes authoritative for subsequent generated continuity.
+
+---
+
+# QUALITY CONTROL GATES
+
+```text
+SOURCE STATE
+    ↓
+QC
+    ↓
+PASS
+    ↓
+IMAGE
+    ↓
+QC
+    ↓
+PASS
+    ↓
+VIDEO #1
+    ↓
+FINAL STATE
+    ↓
+QC
+    ↓
+PASS
+    ↓
+VIDEO → EXTEND
+    ↓
+VIDEO #N
+    ↓
+FINAL STATE #N
+    ↓
+QC
+    ↓
+PASS
+    ↓
+REPEAT
+```
+
+A mandatory QC failure blocks the affected downstream stage until corrected or explicitly handled according to `quality_control.md`.
+
+---
+
+# CONTINUITY RULE
+
+For every extension:
+
+```text
+LATEST VIDEO
+    ↓
+LATEST FINAL STATE
+    ↓
+NEXT CAUSAL EVENT
+    ↓
+VIDEO → EXTEND
+    ↓
+NEW VIDEO
+    ↓
+NEW FINAL STATE
+```
+
+Never:
+
+- restart from the original YouTube beginning;
+- restart from the original IMAGE;
+- discard the latest FINAL STATE;
+- silently contradict the latest generated state;
+- treat an extension as an unrelated new generation.
+
+---
+
+# ERROR RULE
+
+Missing or unavailable information MUST remain explicit.
+
+Use:
 
 ```text
 UNKNOWN
-```
-
-When an element was checked and is absent:
-
-```text
 NOT PRESENT
-```
-
-When a value is not provided by the applicable specification:
-
-```text
 NOT SPECIFIED
 ```
-
-Do not replace missing information with assumptions.
 
 Do not fabricate:
 
@@ -1050,104 +473,52 @@ Do not fabricate:
 
 ---
 
-# 13. SOURCE-OF-TRUTH PRINCIPLE
+# COMPLETION CONDITION
 
-Each document owns its domain.
+Documentation loading is complete only when:
 
 ```text
+map.md
++
 role.md
-→ role semantics
-
++
 task.md
-→ workflow semantics
-
++
 constraint.md
-→ global constraint semantics
-
++
 analysis.md
-→ source-analysis semantics
-
++
 prompt_image.md
-→ image-generation semantics
-
++
 prompt_image_to_video.md
-→ image-to-video semantics
-
++
 prompt_video_to_extend.md
-→ extension semantics
-
++
 final_state.md
-→ generated-state semantics
-
++
 quality_control.md
-→ validation semantics
-
-map.md
-→ document relationship and orchestration semantics
 ```
 
-If documents overlap:
+have all been read and understood.
 
-1. `constraint.md` controls global constraints.
-2. The applicable domain contract controls domain-specific behavior.
-3. `map.md` controls document relationship and execution order only.
-
-`map.md` must not silently redefine another document's contract.
+Only then may the AI execute the DOCS01 workflow.
 
 ---
 
-# 14. READ / EXECUTION ORDER
+# MAP PRINCIPLE
 
-For an orchestrator consuming `docs01`, use:
+`map.md` is the DOCS01 entry point.
 
-```text
-1. role.md
-2. task.md
-3. constraint.md
-4. map.md
-5. analysis.md
-6. quality_control.md
-7. prompt_image.md
-8. quality_control.md
-9. prompt_image_to_video.md
-10. quality_control.md
-11. final_state.md
-12. quality_control.md
-13. prompt_video_to_extend.md
-14. quality_control.md
-15. final_state.md
-16. repeat 13–15
-```
-
-`map.md` is read before execution because it defines how the contracts connect.
-
-The individual domain files remain authoritative for their respective stages.
-
----
-
-# 15. MAP PRINCIPLE
-
-`map.md` answers:
-
-- What does each file do?
-- Which file depends on which?
-- What is the execution order?
-- What state moves between stages?
-- Which state is authoritative?
-- Where are QC gates applied?
-- How are variables mapped?
-- Where is the source/generated boundary?
-
-It does not answer the detailed domain rules already defined in the other documents.
-
-Therefore:
+Its primary function is:
 
 ```text
-map.md
-    ↓
-WHERE / HOW DOCUMENTS CONNECT
-
-individual contracts
-    ↓
-WHAT EACH STAGE DOES
+DISCOVER
+   ↓
+READ ALL
+   ↓
+UNDERSTAND
+   ↓
+EXECUTE
 ```
+
+The complete DOCS01 specification is the combination of all documents listed in this map.
