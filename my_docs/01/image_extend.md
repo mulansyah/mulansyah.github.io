@@ -1,0 +1,25 @@
+## IMAGE → VIDEO
+
+```text
+{{SUBJECT}}
+{{ACTION}}
+{{MOTION}}
+{{CAMERA}}
+{{ENVIRONMENT}}
+{{STYLE}}
+{{NARRATION}}
+{{TEXT_OVERLAY}}
+```
+
+## VIDEO → EXTEND
+
+```text
+{{CONTINUATION}}
+{{SUBJECT_MOTION}}
+{{CAMERA}}
+{{ENVIRONMENT}}
+{{STYLE}}
+{{AUDIO}}
+{{NARRATION}}
+{{TEXT_OVERLAY}}
+```
