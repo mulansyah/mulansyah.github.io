@@ -1,0 +1,12 @@
+## IMAGE → VIDEO
+
+```text
+{{SUBJECT}}
+{{ACTION}}
+{{MOTION}}
+{{CAMERA}}
+{{ENVIRONMENT}}
+{{STYLE}}
+{{NARRATION}}
+{{TEXT_OVERLAY}}
+```
