@@ -2,34 +2,44 @@
 
 ## SOURCE
 
-- The provided YouTube URL is the only source of truth for source-video analysis.
+- The provided YouTube Shorts URL is the source input.
+- The YouTube source is the authority for source-video facts.
 - Do not invent, fabricate, or silently complete missing source information.
 - Do not treat assumptions as observed facts.
+- Generated content must never be presented as source content.
 
 ## EVIDENCE
 
-Every extracted element must be classified as:
+Every extracted source element must be classified as:
 
 - `OBSERVED`
 - `INFERRED`
 - `UNKNOWN`
 - `NOT PRESENT`
 
-Inference must never be presented as observation.
+Rules:
 
-## FIDELITY
+- `OBSERVED` is directly supported by the source.
+- `INFERRED` must be derived from observable evidence and remain explicitly identified as inference.
+- `UNKNOWN` means the value cannot be determined reliably.
+- `NOT PRESENT` means the element was specifically checked and is absent.
+- Never convert `UNKNOWN` into an assumption.
+- Inference must never override contradictory observed evidence.
 
-- Preserve the original subject identity, appearance, environment, objects, composition, camera behavior, lighting, motion, audio, narration, dialogue, and on-screen text whenever they are observable.
+## SOURCE FIDELITY
+
+- Preserve original subject identity, appearance, environment, objects, composition, camera behavior, lighting, color, motion, audio, narration, dialogue, and on-screen text whenever observable.
 - Do not rewrite source events into different events.
 - Do not add characters, objects, actions, locations, dialogue, or visual details without supporting evidence.
 - Do not remove relevant source details merely to simplify the analysis.
 
 ## TEMPORAL
 
-- Preserve the chronological order of events.
+- Preserve chronological order.
 - Use source timestamps whenever available.
 - Do not fabricate timestamps.
-- Scene boundaries must be supported by observable changes in the source.
+- Scene boundaries must be supported by observable changes.
+- Generated continuity must follow the latest generated final state, not reset to the source beginning.
 
 ## VISUAL
 
@@ -67,21 +77,32 @@ Do not fabricate audio that cannot be established from the source.
 - If text cannot be determined reliably, use `UNKNOWN`.
 - Do not invent subtitles, labels, captions, or dialogue.
 
+## SOURCE STATE VS GENERATED STATE
+
+Keep these strictly separate:
+
+- `SOURCE STATE` — facts and states reconstructed from the YouTube source.
+- `GENERATED STATE` — state produced by image/video generation.
+- A generated change must not modify the historical source state.
+- Each extension must use the latest generated final state as its continuity authority.
+
 ## DOWNSTREAM PROMPTS
 
-- Analysis is the source for downstream image and video prompts.
-- Downstream prompts must not introduce unsupported source facts.
-- Persistent identity and environment information must remain consistent across generated assets.
-- Dynamic state must reflect the latest known source or generated state.
-- Image-to-video prompts should describe supported motion rather than unnecessarily replacing the source image description.
-- Video extension prompts must continue from the previous final state rather than restart the scene.
+- `prompt_image.md` defines the visual starting state.
+- `prompt_image_to_video.md` animates the existing image.
+- `prompt_video_to_extend.md` continues the latest generated video.
+- Do not introduce unsupported source facts into downstream prompts.
+- Do not restart VIDEO → EXTEND from the original YouTube source.
+- Do not restart VIDEO → EXTEND from a new image unless explicitly requested.
+- Preserve subject identity, environment, camera, style, lighting/color continuity, and relevant audio continuity.
 
 ## VARIABLES
 
 - Resolve all variables before final output.
-- Do not leave unresolved generic placeholders in production-ready output.
+- Do not leave unresolved generic placeholders in production-ready prompts.
 - Use `UNKNOWN`, `NOT PRESENT`, or `NOT SPECIFIED` where appropriate.
 - Preserve the semantic meaning of every variable when mapping between documents.
+- Do not silently change variable scope between source analysis and generation.
 
 ## UNCERTAINTY
 
@@ -91,6 +112,28 @@ When evidence is incomplete or ambiguous:
 2. identify the uncertainty;
 3. use the appropriate evidence state;
 4. do not force a definitive interpretation.
+
+## GENERATION BOUNDARIES
+
+### IMAGE
+
+- Represents a selected source-faithful visual starting state.
+- Must not introduce unsupported source facts.
+
+### IMAGE → VIDEO
+
+- The image is the starting visual state.
+- Focus on supported temporal transformation, action, and motion.
+- Do not unnecessarily recreate the entire image description.
+- Do not create an unrelated scene.
+
+### VIDEO → EXTEND
+
+- The previous generated video's final state is the authoritative starting state.
+- Continue the current scene causally.
+- Preserve continuity across subject, object, environment, camera, style, lighting/color, audio, narration, and text where applicable.
+- Do not reset the scene.
+- Do not treat an extension as a new independent generation.
 
 ## OUTPUT
 
