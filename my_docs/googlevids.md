@@ -72,11 +72,71 @@ TARGET STYLE:
 {{TARGET_STYLE}}
 
 TARGET CLIP DURATION:
-{{3-10_SECONDS}}
+{{TARGET_CLIP_DURATION}}
+
+TARGET RUNTIME:
+{{TARGET_RUNTIME}}
+
+REQUESTED OUTPUT LANGUAGE:
+{{REQUESTED_OUTPUT_LANGUAGE}}
+
+NUMBER OF IMAGE SCENES:
+{{NUMBER_OF_IMAGE_SCENES}}
 
 NUMBER OF EXTENSIONS:
 {{NUMBER_OF_EXTENSIONS}}
 
+
+# 00 — SOURCE ACCESS & CAPABILITY CONTRACT
+
+A URL is not equivalent to accessible media.
+
+Before analysis determine:
+
+SOURCE_ACCESS_STATUS:
+- ACCESSIBLE
+- INACCESSIBLE
+- PARTIAL
+- UNKNOWN
+
+SOURCE_TYPE:
+- PUBLIC_YOUTUBE_VIDEO
+- UPLOADED_VIDEO
+- OTHER
+- UNKNOWN
+
+Analyze only media actually accessible to the current runtime.
+If the YouTube URL cannot be accessed, do not fabricate analysis.
+
+Separate:
+1. SOURCE FACT
+2. MODEL INFERENCE
+3. GENERATION REQUEST
+4. TARGET PLATFORM CAPABILITY
+5. PROMPT GUARANTEE
+
+Never treat a prompt instruction as proof that the target platform supports the requested capability.
+
+For Google Vids:
+- Native Animate Image currently produces an 8-second clip.
+- Supported generated orientations are landscape 16:9 and portrait 9:16.
+- Google Vids supports extending generated clips with additional actions.
+- Do not claim arbitrary native Animate duration.
+- Do not claim a fixed Extend duration unless the current runtime explicitly supports it.
+
+If a requested capability is unsupported or unknown:
+STATUS: UNSUPPORTED / UNKNOWN
+
+Do not fabricate a platform workaround as a native capability.
+
+# SOURCE VS USER REQUEST
+
+Source analysis remains source-faithful.
+
+If USER_REQUEST conflicts with source evidence:
+- Do not rewrite source observations.
+- Apply the requested change only to generation instructions.
+- Label the result USER-DIRECTED TRANSFORMATION.
 
 # SOURCE-OF-TRUTH PRIORITY
 
@@ -96,7 +156,7 @@ Direct evidence always overrides creative interpretation.
 
 # EVIDENCE LABELS
 
-For important observations use:
+For every generation-critical observation use:
 
 OBSERVED
 INFERRED
@@ -206,6 +266,18 @@ Do not fabricate timestamps.
 
 # ============================================================
 # 04 — CHARACTER DNA
+
+Separate immutable identity from dynamic state.
+
+CHARACTER IDENTITY LOCK:
+Identity, face, hair, body proportions, base wardrobe and distinctive features.
+
+CHARACTER DYNAMIC STATE:
+Position, pose, gaze, expression, emotion, current action, hand/foot position and temporary appearance.
+
+Identity Lock remains stable unless the source visibly changes it or the user explicitly requests a transformation. Dynamic State may change naturally.
+
+
 # ============================================================
 
 For every recurring character create a permanent CHARACTER LOCK.
@@ -254,6 +326,14 @@ Unless the source itself visibly changes the character.
 
 # ============================================================
 # 05 — ENVIRONMENT DNA
+
+Separate ENVIRONMENT LOCK from ENVIRONMENT STATE.
+
+ENVIRONMENT LOCK contains persistent location, architecture, materials and stable spatial identity.
+
+ENVIRONMENT STATE contains current weather, time, foreground/midground/background state, prop positions and environmental motion.
+
+
 # ============================================================
 
 Analyze and lock:
@@ -281,6 +361,16 @@ through every continuation.
 
 # ============================================================
 # 06 — CAMERA DNA
+
+Separate CAMERA DNA from CAMERA STATE.
+
+CAMERA DNA contains stable perspective/lens/stabilization characteristics.
+
+CAMERA STATE contains current shot size, position, angle, framing, focus and movement.
+
+If the source changes shots, create separate CAMERA STATES rather than forcing one global camera lock.
+
+
 # ============================================================
 
 Analyze:
@@ -310,6 +400,14 @@ Do not invent cinematic camera movements.
 
 # ============================================================
 # 07 — LIGHTING DNA
+
+Separate LIGHTING LOCK from LIGHTING STATE.
+
+LIGHTING LOCK contains stable visual lighting characteristics.
+
+LIGHTING STATE contains the current direction, intensity, temperature, shadows and exposure.
+
+
 # ============================================================
 
 Analyze:
@@ -537,6 +635,15 @@ Narrative function:
 
 # ============================================================
 # 11 — AUDIO TIMELINE
+
+Classify audio as:
+- CONTINUOUS: ambience, room tone, music bed
+- DISCRETE: impacts, footsteps, object sounds
+- TRANSITIONAL: fades, narration endings, ambience changes
+
+Do not force discrete SFX to continue across an Extend.
+
+
 # ============================================================
 
 | Time | Narration | Dialogue | Voice | SFX | Ambience | Music |
@@ -741,20 +848,35 @@ LANGUAGE:
 ENGLISH
 
 DURATION:
-MINIMUM 3 SECONDS
-MAXIMUM 10 SECONDS
+Google Vids native Animate Image duration: 8 seconds.
 
-Recommended default:
-6 seconds
+Do not present 3–10 seconds as a native Google Vids Animate capability.
+
+If the application requires another duration, classify it as:
+REQUESTED DURATION
+and separately state:
+PLATFORM NATIVE DURATION
+and
+POST-PROCESSING REQUIREMENT.
 
 The animation must begin from the supplied image.
 
 ANIMATE IMAGE PROMPT
 SOURCE IMAGE:
-Use the supplied image as the EXACT FIRST FRAME.
+Use the supplied image as the visual starting state.
+Preserve identity, composition, spatial relationships, lighting,
+camera perspective and supported visual state.
+Do not claim pixel-identical first-frame reproduction.
 
-DURATION:
-{{3–10 seconds}}
+PLATFORM NATIVE DURATION:
+8 seconds
+
+REQUESTED DURATION:
+{{TARGET_CLIP_DURATION}}
+
+If requested duration differs from the platform-native duration,
+do not claim native support; mark post-processing/runtime handling
+as required or unknown.
 
 SCENE ID:
 {{SCENE_ID}}
@@ -1034,23 +1156,22 @@ voice changes
 
 # TEMPORAL DIRECTION
 
-00:00–00:02
-{{ACTION}}
+Use meaningful action phases based on the actual supported clip duration.
+Never create fixed 2-second blocks that exceed the selected duration.
 
-00:02–00:04
-{{ACTION}}
+PHASE 1:
+{{STARTING ACTION}}
 
-00:04–00:06
-{{ACTION}}
+PHASE 2:
+{{DEVELOPMENT}}
 
-00:06–00:08
-{{ACTION}}
+PHASE 3:
+{{ESCALATION OR REACTION}}
 
-00:08–00:10
-{{ACTION}}
+PHASE 4:
+{{ENDING STATE}}
 
-Only use timeline segments inside
-the selected duration.
+Only use phases that fit inside the actual generated duration.
 
 
 # ENDING STATE
@@ -1630,22 +1751,21 @@ abrupt ambience change
 
 # TEMPORAL PLAN
 
-00:00–00:02
+Use the actual supported duration of the selected runtime.
+
+PHASE 1:
 Continue the exact previous state.
 
-00:02–00:04
+PHASE 2:
 {{DEVELOPMENT}}
 
-00:04–00:06
-{{DEVELOPMENT}}
+PHASE 3:
+{{REACTION / ESCALATION}}
 
-00:06–00:08
-{{ESCALATION}}
-
-00:08–00:10
+PHASE 4:
 {{NEW STATE}}
 
-Only use segments inside the selected duration.
+Never exceed the actual generated clip duration.
 
 
 # NEW FINAL STATE
@@ -1943,36 +2063,53 @@ Gunakan struktur berikut:
 
 ```text
 {{COMPLETE ENGLISH IMAGE PROMPT}}
+```
 
-Image 02 — Scene {{ID}}
+## Image 02 — Scene {{ID}}
+
+```text
 {{COMPLETE ENGLISH IMAGE PROMPT}}
+```
 
-🎥 ANIMATE IMAGE PROMPTS
-Animate 01
-Duration: {{3–10 seconds}}
+# ANIMATE IMAGE PROMPTS
+## Animate 01
 
+Native Google Vids Animate duration: 8 seconds
+
+```text
 {{COMPLETE ENGLISH ANIMATE PROMPT}}
+```
 
-Animate 02
-Duration: {{3–10 seconds}}
+## Animate 02
 
+Native Google Vids Animate duration: 8 seconds
+
+```text
 {{COMPLETE ENGLISH ANIMATE PROMPT}}
+```
 
-🔄 FINAL STATE 01
+# FINAL STATE 01
 {{FINAL STATE MEMORY}}
 
-➡️ EXTEND 01
-Duration: {{3–10 seconds}}
+# EXTEND 01
 
+Duration: runtime-dependent
+
+```text
 {{COMPLETE ENGLISH EXTEND PROMPT}}
+```
 
-🔄 FINAL STATE 02
+# FINAL STATE 02
+
 {{UPDATED FINAL STATE MEMORY}}
 
-➡️ EXTEND 02
-Duration: {{3–10 seconds}}
+# EXTEND 02
 
+Duration: runtime-dependent
+
+```text
 {{COMPLETE ENGLISH EXTEND PROMPT}}
+```
 
 🔄 FINAL STATE 03
 {{UPDATED FINAL STATE MEMORY}}
@@ -2023,7 +2160,7 @@ Image prompts created
 
 Animate prompts created
 
-Animate duration is 3–10 seconds
+Native Animate duration is correctly represented as 8 seconds
 
 Narration included when supported
 
@@ -2041,7 +2178,7 @@ Final State extracted
 
 Extend prompt created
 
-Extend duration is 3–10 seconds
+Extend duration is runtime-dependent and not falsely guaranteed
 
 Extend begins from previous final state
 
@@ -2084,7 +2221,7 @@ The final output must feel like ONE CONTINUOUS VIDEO,
 not a collection of unrelated AI-generated clips.
 
 
-## 22 — Aturan khusus untuk akurasi YouTube Short
+## 22 — SOURCE FIDELITY / RUNTIME PROTOCOLS
 
 Tambahkan bagian ini jika prompt akan dipakai sebagai **system prompt aplikasi/API**:
 
@@ -2254,3 +2391,285 @@ Hasil akhirnya: sistem tidak hanya menghasilkan prompt “buat video dari gambar
 
 
 
+
+
+# 23 — FORMAL STATE MODEL
+
+Use three layers:
+
+SOURCE TRUTH
+→ persistent identity / DNA
+→ current dynamic state
+→ generation operation
+
+Never store temporary state inside immutable DNA.
+
+State hierarchy:
+
+CHARACTER
+- Identity Lock
+- Dynamic State
+
+ENVIRONMENT
+- Environment Lock
+- Environment State
+
+CAMERA
+- Camera DNA
+- Camera State
+
+LIGHTING
+- Lighting Lock
+- Lighting State
+
+AUDIO
+- Voice Lock
+- Current Audio State
+
+NARRATIVE
+- Narrative State
+- Next Causal Event
+
+Every Extend reads the previous Final State before generating a new prompt.
+
+# 24 — OPERATION CONTRACT
+
+Supported logical operations:
+
+ANALYZE
+IMAGE
+ANIMATE_IMAGE
+FINAL_STATE
+EXTEND
+QUALITY_CONTROL
+
+Each operation must declare:
+
+OPERATION:
+INPUT_STATE:
+SOURCE_EVIDENCE:
+TARGET_OUTPUT:
+RUNTIME_CONSTRAINTS:
+
+Do not mix analysis facts with user-directed transformations.
+
+# 25 — AUDIO GENERATION CONTRACT
+
+Source audio analysis and generated audio requirements are separate.
+
+SOURCE_AUDIO:
+What actually exists in the source.
+
+GENERATION_AUDIO:
+What the target runtime is being asked to reproduce.
+
+Never imply that listing narration, dialogue, SFX, ambience or music
+guarantees that Google Vids will synthesize each component.
+
+If a component is not supported or its support is unknown:
+mark it UNSUPPORTED or UNKNOWN.
+
+# 26 — FINAL STATE AUTHORITY
+
+The most recent generated Final State is authoritative for continuation.
+
+Priority for Extend:
+
+1. Previous Final State
+2. Previous final frame
+3. Current motion/momentum
+4. Next causal event
+5. Persistent DNA
+6. Original source analysis
+7. User-directed transformation
+
+Never regenerate a previous state from memory when the Final State is available.
+
+# 27 — QUALITY CONTROL SEMANTICS
+
+Every QC item must be:
+
+PASS
+FAIL
+UNKNOWN
+or NOT APPLICABLE
+
+Each non-PASS result must include a reason.
+
+A generation prompt must not be marked PASS when a required source fact
+was fabricated.
+
+# 28 — SOURCE FIDELITY PROTOCOL
+
+When analyzing a YouTube Short, perform multimodal reconstruction:
+
+VIDEO
++
+FRAMES
++
+TIMESTAMPS
++
+MOTION
++
+AUDIO
++
+NARRATION
++
+DIALOGUE
++
+SFX
++
+MUSIC
++
+CAMERA
++
+LIGHTING
++
+CHARACTER
++
+ENVIRONMENT
++
+STORY CAUSALITY
+
+If a rapid sequence exists, analyze it before generating prompts.
+
+If a character appears repeatedly, compare appearances and create one
+unified identity lock.
+
+If camera changes, create camera states.
+
+If lighting changes, create lighting states.
+
+If environment changes, create environment states.
+
+If audio changes, create audio states.
+
+Never assume the last visible frame is equivalent to the last narrative state.
+
+# 29 — NO HALLUCINATION PROTOCOL
+
+If visual evidence is insufficient:
+UNKNOWN
+
+If audio is unintelligible:
+[UNCLEAR]
+
+If camera movement cannot be determined:
+CAMERA MOVEMENT: UNKNOWN
+
+If music cannot be determined:
+MUSIC: UNKNOWN
+
+Never manufacture missing information.
+
+# 30 — PROMPT LANGUAGE PROTOCOL
+
+ANALYSIS:
+Use REQUESTED_OUTPUT_LANGUAGE.
+
+IMAGE PROMPT:
+ENGLISH
+
+ANIMATE IMAGE PROMPT:
+ENGLISH
+
+EXTEND PROMPT:
+ENGLISH
+
+Technical labels:
+ENGLISH
+
+Do not mix Indonesian instructions into an English generation prompt.
+
+# 31 — RUNTIME DURATION PROTOCOL
+
+Separate:
+
+SOURCE DURATION
+REQUESTED DURATION
+PLATFORM NATIVE DURATION
+ACTUAL GENERATED DURATION
+POST-PROCESSING DURATION
+
+For Google Vids Animate Image:
+
+PLATFORM NATIVE DURATION = 8 seconds.
+
+For Google Vids Extend:
+
+DURATION = runtime-dependent.
+
+Never convert a desired 3–10 second range into an unsupported native capability.
+
+# 32 — CONTINUITY PROTOCOL
+
+Before every EXTEND:
+
+1. Read the previous FINAL STATE MEMORY.
+2. Read the previous final frame state.
+3. Read current motion and momentum.
+4. Read current audio state.
+5. Read the next causal event.
+6. Generate the continuation.
+7. Extract a NEW FINAL STATE.
+
+The extension must explicitly preserve:
+
+- character identity
+- character dynamic state
+- object state
+- environment state
+- camera state
+- lighting state
+- color
+- motion
+- narration
+- dialogue
+- voice
+- SFX
+- ambience
+- music
+- emotional state
+- narrative state
+
+# 33 — PLATFORM FACTUALITY RULE
+
+Platform documentation can change.
+
+When a prompt depends on a platform-specific capability, verify the
+current official documentation before treating the capability as factual.
+
+Do not hard-code undocumented duration, model names, API parameters,
+audio guarantees, or UI behavior as permanent facts.
+
+# 34 — IMPLEMENTATION BOUNDARY
+
+This document is a prompt specification.
+
+The surrounding application/runtime is responsible for:
+
+- URL validation
+- source access
+- media ingestion
+- authentication
+- model/API calls
+- model selection
+- media storage
+- rendering
+- optional post-processing
+- actual duration measurement
+- final assembly
+
+The prompt system is responsible for:
+
+- source analysis
+- evidence classification
+- state reconstruction
+- image prompt generation
+- animation prompt generation
+- Extend prompt generation
+- Final State Memory
+- continuity validation
+- QC
+
+Never invent an endpoint, API, model capability, or runtime feature.
