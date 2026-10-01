@@ -176,6 +176,7 @@ function App() {
   const [showLogs, setShowLogs] = useState(false);
   const [expanded, setExpanded] = useState<number | null>(null);
   const [cleanup, setCleanup] = useState<CleanupResult[]>([]);
+  const [cleanupRan, setCleanupRan] = useState(false);
   const [cleanupFailed, setCleanupFailed] = useState(false);
 
   const abortRef = useRef<AbortController | null>(null);
@@ -208,9 +209,12 @@ function App() {
 
       const response = await fetch(`${BASE_URL}${normalizePath(path)}`, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers:
+          body === undefined
+            ? {}
+            : {
+                "Content-Type": "text/plain;charset=UTF-8",
+              },
         body:
           body === undefined
             ? undefined
@@ -230,9 +234,7 @@ function App() {
         }
       }
 
-      if (response.ok) {
-        setConnection("Online");
-      }
+      setConnection("Online");
 
       return {
         status: response.status,
@@ -581,6 +583,7 @@ function App() {
     );
 
     setCleanup([]);
+    setCleanupRan(false);
     setCleanupFailed(false);
     setLogs([]);
     setExpanded(null);
@@ -657,6 +660,7 @@ function App() {
     );
 
     let stopped = false;
+    let blockedAt: number | null = null;
 
     const execute = async (
       id: number,
@@ -671,6 +675,7 @@ function App() {
     ) => {
       if (controller.signal.aborted) {
         stopped = true;
+        blockedAt = id;
 
         updateResult(id, {
           status: "BLOCKED",
@@ -1671,10 +1676,8 @@ function App() {
         if (r.kind === "BLOCKED") stopped = true;
       }
 
-      if (stopped) {
-        markRemainingSkipped(
-          results.find((x) => x.status === "IDLE")?.id ?? 28
-        );
+      if (stopped && blockedAt !== null) {
+        markRemainingSkipped(blockedAt + 1);
       }
     } finally {
       setStatus("Cleaning Up");
@@ -1735,6 +1738,7 @@ function App() {
       }
 
       setCleanup(cleanupResults);
+      setCleanupRan(true);
 
       const failedCleanup = cleanupResults.some(
         (item) => !item.ok
@@ -1795,6 +1799,7 @@ function App() {
 
     setLogs([]);
     setCleanup([]);
+    setCleanupRan(false);
     setCleanupFailed(false);
     setExpanded(null);
     setConnection("Unknown");
@@ -1831,8 +1836,8 @@ function App() {
     counts.fail === 0 &&
     counts.blocked === 0 &&
     counts.skipped === 0 &&
+    cleanupRan &&
     cleanupFailed === false &&
-    cleanup.length > 0 &&
     cleanup.every((item) => item.ok);
 
   const statusClass = (status: TestStatus) => {
@@ -2572,7 +2577,7 @@ function App() {
             <div className="label">Cleanup</div>
 
             <div className="cleanup">
-              {cleanup.length === 0 ? (
+              {!cleanupRan ? (
                 <div
                   style={{
                     color: "#667181",
@@ -2581,6 +2586,16 @@ function App() {
                   }}
                 >
                   Cleanup has not run.
+                </div>
+              ) : cleanup.length === 0 ? (
+                <div
+                  style={{
+                    color: "#667181",
+                    marginTop: 10,
+                    fontSize: 12,
+                  }}
+                >
+                  Cleanup completed. No test resources were created.
                 </div>
               ) : (
                 cleanup.map((item) => (
